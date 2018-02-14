@@ -11,11 +11,21 @@
 <!--         <Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonAction" fx:id="button" /> -->
 <!--         <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" /> -->
 
-    <AnchorPane layoutX="10" layoutY="10">
+    <AnchorPane layoutX="10" layoutY="10" fx:id="selectFilePane">
 	    <border></border>
 	    <children>
-	    	<Button layoutX="5" layoutY="5" text="Pobierz dane" onAction="#hadnleButtonInputData" fx:id="inputData"/>
-	    	<Label layoutX="5" layoutY="35" fx:id="inputDataStatus"/>
+	    	<Button layoutX="5" layoutY="5" text="Select file" onAction="#selectFile" fx:id="selectFile"/>
+	    	<Label layoutX="5" layoutY="35" fx:id="selectedFileName"/>
+	    </children>
+    </AnchorPane>
+
+    <AnchorPane layoutX="10" layoutY="10" disable="true" fx:id="loadDataPane">
+	    <border></border>
+	    <children>
+	    	<Button layoutX="5" layoutY="55" text="Load data" onAction="#hadnleButtonInputData" fx:id="inputData"/>
+	    	<Label layoutX="5" layoutY="85" fx:id="inputDataStatus"/>
+	    	<Label layoutX="5" layoutY="105" fx:id="learningPercent"/>
+	    	<Label layoutX="5" layoutY="125" fx:id="learningTime"/>
 	    </children>
     </AnchorPane>
 
@@ -27,7 +37,7 @@
 	    	<TextField layoutX="5" layoutY="35" fx:id="inX"/>
 	    	<TextField layoutX="5" layoutY="65" fx:id="inY"/>
 	    	<TextField layoutX="5" layoutY="95" fx:id="inZ"/>
-	    	<Button layoutX="5" layoutY="125" text="Pobierz dane" onAction="#hadnleButtonFeedForward" fx:id="feedForward"/>
+	    	<Button layoutX="5" layoutY="125" text="Ask" onAction="#hadnleButtonFeedForward" fx:id="feedForward"/>
 	    	<Label  layoutX="5" layoutY="155" fx:id="feedFResult"/>
 	    </children>
     </AnchorPane>
