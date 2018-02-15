@@ -19,19 +19,17 @@
 	    </children>
     </AnchorPane>
 
-    <AnchorPane layoutX="10" layoutY="10" disable="true" fx:id="loadDataPane">
-	    <border></border>
+    <AnchorPane layoutX="10" layoutY="60" disable="true" fx:id="loadDataPane" styleClass="bordered_pane">
 	    <children>
-	    	<Button layoutX="5" layoutY="55" text="Load data" onAction="#hadnleButtonInputData" fx:id="inputData"/>
-	    	<Label layoutX="5" layoutY="85" fx:id="inputDataStatus"/>
-	    	<Label layoutX="5" layoutY="105" fx:id="learningPercent"/>
-	    	<Label layoutX="5" layoutY="125" fx:id="learningTime"/>
+	    	<Button layoutX="5" layoutY="5" text="Load data" onAction="#hadnleButtonInputData" fx:id="inputData"/>
+	    	<Label layoutX="5" layoutY="35" fx:id="inputDataStatus"/>
+	    	<Label layoutX="5" layoutY="55" fx:id="learningPercent"/>
+	    	<Label layoutX="5" layoutY="75" fx:id="learningTime"/>
 	    </children>
     </AnchorPane>
 
-    <AnchorPane layoutX="100" layoutY="10" disable="true" fx:id="feedFPane">
+    <AnchorPane layoutX="100" layoutY="10" disable="true" fx:id="feedFPane" styleClass="bordered_pane">
     <!-- ten panel należy zamienie tworzonym programowo i dostosowanym do wejśc dla danego przykladu -->
-	    <border></border>
 	    <children>
 	    	<TextField layoutX="5" layoutY="5" fx:id="inKaraty"/>
 	    	<TextField layoutX="5" layoutY="35" fx:id="inX"/>
@@ -41,6 +39,9 @@
 	    	<Label  layoutX="5" layoutY="155" fx:id="feedFResult"/>
 	    </children>
     </AnchorPane>
+
+	<AnchorPane layoutX="10" layoutY="160" fx:id="pane" styleClass="bordered_pane">
+	</AnchorPane>
 
     </children>
 </AnchorPane>

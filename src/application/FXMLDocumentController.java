@@ -33,14 +33,22 @@ public class FXMLDocumentController implements Initializable{
     @FXML private Label learningTime;
     @FXML private Label learningPercent;
 
+    @FXML private AnchorPane pane;
+
     private ANNController annController;
+    private RawDataController rawDataController;
 
     @FXML
     private void selectFile(ActionEvent event){
-    	String dataFileName = "diamenty.csv";
+    	String dataFileName = "data\\diamonds.csv";
+
     	annController = new ANNController(dataFileName);
+    	rawDataController = new RawDataController(pane);
     	selectedFileName.setText(dataFileName);
     	loadDataPane.setDisable(false);
+
+    	rawDataController.loadCSVData(dataFileName);
+		rawDataController.setColumnsNames();
     }
 
     @FXML
