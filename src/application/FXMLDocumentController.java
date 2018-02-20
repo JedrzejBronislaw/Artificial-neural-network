@@ -1,12 +1,17 @@
 package application;
 
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -42,6 +47,13 @@ public class FXMLDocumentController implements Initializable{
     private void selectFile(ActionEvent event){
     	String dataFileName = "data\\diamonds.csv";
 
+    	SourceData rd = new SourceData(dataFileName);
+    	int n = rd.numberOfColumns();
+    	for(int i=0; i<n; i++){
+    		System.out.println(rd.getColumnName(i) + ": " + rd.getColumnType(i));
+    		System.out.println(rd.getColumnStatistics(i));
+    	}
+
     	annController = new ANNController(dataFileName);
     	rawDataController = new RawDataController(pane);
     	selectedFileName.setText(dataFileName);
@@ -49,12 +61,56 @@ public class FXMLDocumentController implements Initializable{
 
     	rawDataController.loadCSVData(dataFileName);
 		rawDataController.setColumnsNames();
+
+		wykres(rd);
     }
 
-    @FXML
+    private void wykres(SourceData rd) {
+    	ColumnStatstics statPredCol = rd.getColumn(rd.getPredictionColumnIndex()).getStatistics();
+    	ColumnStatstics statValue = rd.getColumn(0).getStatistics();
+
+    	System.out.println(statPredCol.getMin());
+    	System.out.println(statPredCol.getMax());
+    	System.out.println(statValue.getMin());
+    	System.out.println(statValue.getMax());
+
+    	NumberAxis yAxis = new NumberAxis("Oœ Y", Math.floor(statPredCol.getMin()), Math.ceil(statPredCol.getMax()), 1);
+    	NumberAxis xAxis = new NumberAxis("Oœ X", Math.floor(statValue.getMin()), Math.ceil(statValue.getMax()), 1);
+		ScatterChart<Number, Number> sc = new ScatterChart<>(xAxis, yAxis);
+		sc.setTitle("Wykres");
+
+		XYChart.Series<Number, Number> seria = new Series<>();
+		seria.setName("Seria 1");
+//		seria.getData().add(new XYChart.Data<Number, Number>(2,5));
+//		seria.getData().add(new XYChart.Data<Number, Number>(-2,10));
+//		seria.getData().add(new XYChart.Data<Number, Number>(17,52));
+//		seria.getData().add(new XYChart.Data<Number, Number>(1,45));
+
+		Random r = new Random();
+		int x;
+		for (int i=0; i<100;i++){
+//			if(i%10==0)
+			x = r.nextInt(rd.numberOfRecords());
+//			if (rd.getValue(0, x) > 3)
+			if (rd.getValue(rd.getPredictionColumnIndex(), x) > 8)
+				seria.getData().add(new XYChart.Data<Number, Number>(rd.getValue(0, x), rd.getValue(rd.getPredictionColumnIndex(), x)));
+			else
+				i--;
+//			if(i%1000 == 0)
+				System.out.println((float)i/rd.numberOfRecords()*100 + "%");
+		}
+
+		sc.getData().add(seria);
+
+		feedFPane.getChildren().add(sc);
+	}
+
+	@FXML
     private void hadnleButtonInputData(ActionEvent event){
     		try{
 	    		inputDataStatus.setText("Uczenie...");
+
+
 	    		annController.uczODiamentach((percentage)->{
 	    			Platform.runLater(()->{
 	    				learningPercent.setText(percentage*100+"%");
