@@ -14,8 +14,10 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 
 public class FXMLDocumentController implements Initializable{
 
@@ -40,19 +42,17 @@ public class FXMLDocumentController implements Initializable{
 
     @FXML private AnchorPane pane;
 
+    @FXML private Button showChartsButton;
+    @FXML private AnchorPane chartsPane;
+
     private ANNController annController;
     private RawDataController rawDataController;
 
+    String dataFileName;
+
     @FXML
     private void selectFile(ActionEvent event){
-    	String dataFileName = "data\\diamonds.csv";
-
-    	SourceData rd = new SourceData(dataFileName);
-    	int n = rd.numberOfColumns();
-    	for(int i=0; i<n; i++){
-    		System.out.println(rd.getColumnName(i) + ": " + rd.getColumnType(i));
-    		System.out.println(rd.getColumnStatistics(i));
-    	}
+    	dataFileName = "data\\diamonds.csv";
 
     	annController = new ANNController(dataFileName);
     	rawDataController = new RawDataController(pane);
@@ -61,48 +61,72 @@ public class FXMLDocumentController implements Initializable{
 
     	rawDataController.loadCSVData(dataFileName);
 		rawDataController.setColumnsNames();
-
-		wykres(rd);
+		
+		showChartsButton.setDisable(false);
     }
 
-    private void wykres(SourceData rd) {
+    @FXML
+    private void showCharts(ActionEvent event){
+
+    	SourceData rd = new SourceData(dataFileName);
+    	int n = rd.numberOfColumns();
+    	for(int i=0; i<n; i++){
+    		System.out.println(rd.getColumnName(i) + ": " + rd.getColumnType(i));
+    		System.out.println(rd.getColumnStatistics(i));
+    	}
+
+    	rd.selectPredictColumn(3);
+
+    	ScrollPane scrollPane = new ScrollPane();
+    	scrollPane.setPrefSize(600, 600);
+    	chartsPane.getChildren().add(scrollPane);
+    	VBox vBox = new VBox();
+
+		for(int i=0;i<rd.numberOfColumns();i++){
+			ScatterChart<Number, Number> sc = chart(rd,i);
+			sc.setLayoutY(i*400);
+			vBox.getChildren().add(sc);
+		}
+		scrollPane.setContent(vBox);
+    }
+
+    private ScatterChart<Number, Number> chart(SourceData rd, int columnIndex) {
+    	final int maxNumberOfPoints = 100;
+
     	ColumnStatstics statPredCol = rd.getColumn(rd.getPredictionColumnIndex()).getStatistics();
-    	ColumnStatstics statValue = rd.getColumn(0).getStatistics();
+    	ColumnStatstics statValue = rd.getColumn(columnIndex).getStatistics();
 
-    	System.out.println(statPredCol.getMin());
-    	System.out.println(statPredCol.getMax());
-    	System.out.println(statValue.getMin());
-    	System.out.println(statValue.getMax());
+    	int yMin = (int) Math.floor(statPredCol.getMin());
+    	int yMax = (int) Math.ceil(statPredCol.getMax());
+    	int xMin = (int) Math.floor(statValue.getMin());
+    	int xMax = (int) Math.ceil(statValue.getMax());
 
-    	NumberAxis yAxis = new NumberAxis("Oœ Y", Math.floor(statPredCol.getMin()), Math.ceil(statPredCol.getMax()), 1);
-    	NumberAxis xAxis = new NumberAxis("Oœ X", Math.floor(statValue.getMin()), Math.ceil(statValue.getMax()), 1);
+    	int xUnit = (int) Math.ceil((xMax-xMin)/10f);
+    	int yUnit = (int) Math.ceil((yMax-yMin)/10f);
+
+    	String xLabel = rd.getColumnName(columnIndex);
+    	String yLabel = rd.getColumnName(rd.getPredictionColumnIndex());
+
+    	NumberAxis yAxis = new NumberAxis(yLabel, yMin, yMax, yUnit);
+    	NumberAxis xAxis = new NumberAxis(xLabel, xMin, xMax, xUnit);
 		ScatterChart<Number, Number> sc = new ScatterChart<>(xAxis, yAxis);
-		sc.setTitle("Wykres");
+//		sc.setTitle("Wykres");
 
 		XYChart.Series<Number, Number> seria = new Series<>();
-		seria.setName("Seria 1");
-//		seria.getData().add(new XYChart.Data<Number, Number>(2,5));
-//		seria.getData().add(new XYChart.Data<Number, Number>(-2,10));
-//		seria.getData().add(new XYChart.Data<Number, Number>(17,52));
-//		seria.getData().add(new XYChart.Data<Number, Number>(1,45));
+		seria.setName(xLabel);
 
 		Random r = new Random();
 		int x;
-		for (int i=0; i<100;i++){
-//			if(i%10==0)
+		int n;
+		n = Math.min(rd.numberOfRecords(), maxNumberOfPoints);
+		for (int i=0; i<n;i++){
 			x = r.nextInt(rd.numberOfRecords());
-//			if (rd.getValue(0, x) > 3)
-			if (rd.getValue(rd.getPredictionColumnIndex(), x) > 8)
-				seria.getData().add(new XYChart.Data<Number, Number>(rd.getValue(0, x), rd.getValue(rd.getPredictionColumnIndex(), x)));
-			else
-				i--;
-//			if(i%1000 == 0)
-				System.out.println((float)i/rd.numberOfRecords()*100 + "%");
+				seria.getData().add(new XYChart.Data<Number, Number>(rd.getValue(columnIndex, x), rd.getValue(rd.getPredictionColumnIndex(), x)));
 		}
 
 		sc.getData().add(seria);
 
-		feedFPane.getChildren().add(sc);
+		return sc;
 	}
 
 	@FXML

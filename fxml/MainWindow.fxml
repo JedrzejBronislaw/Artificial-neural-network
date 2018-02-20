@@ -6,7 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FXMLDocumentController">
     <children>
 <!--         <Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonAction" fx:id="button" /> -->
 <!--         <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" /> -->
@@ -16,10 +16,11 @@
 	    <children>
 	    	<Button layoutX="5" layoutY="5" text="Select file" onAction="#selectFile" fx:id="selectFile"/>
 	    	<Label layoutX="5" layoutY="35" fx:id="selectedFileName"/>
+	    	<Button layoutX="5" layoutY="65" text="Show charts" onAction="#showCharts" fx:id="showChartsButton" disable="true"/>
 	    </children>
     </AnchorPane>
 
-    <AnchorPane layoutX="10" layoutY="60" disable="true" fx:id="loadDataPane" styleClass="bordered_pane">
+    <AnchorPane layoutX="10" layoutY="110" disable="true" fx:id="loadDataPane" styleClass="bordered_pane">
 	    <children>
 	    	<Button layoutX="5" layoutY="5" text="Load data" onAction="#hadnleButtonInputData" fx:id="inputData"/>
 	    	<Label layoutX="5" layoutY="35" fx:id="inputDataStatus"/>
@@ -28,7 +29,7 @@
 	    </children>
     </AnchorPane>
 
-    <AnchorPane layoutX="100" layoutY="10" disable="true" fx:id="feedFPane" styleClass="bordered_pane">
+    <AnchorPane layoutX="120" layoutY="10" disable="true" fx:id="feedFPane" styleClass="bordered_pane">
     <!-- ten panel należy zamienie tworzonym programowo i dostosowanym do wejśc dla danego przykladu -->
 	    <children>
 	    	<TextField layoutX="5" layoutY="5" fx:id="inKaraty"/>
@@ -40,7 +41,10 @@
 	    </children>
     </AnchorPane>
 
-	<AnchorPane layoutX="10" layoutY="160" fx:id="pane" styleClass="bordered_pane">
+	<AnchorPane layoutX="10" layoutY="210" fx:id="pane" styleClass="bordered_pane">
+	</AnchorPane>
+	
+	<AnchorPane layoutX="300" layoutY="10" fx:id="chartsPane" styleClass="bordered_pane">
 	</AnchorPane>
 
     </children>
