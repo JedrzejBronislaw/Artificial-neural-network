@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TableView?>
 
 <AnchorPane id="AnchorPane" prefHeight="200" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FXMLDocumentController">
     <children>
@@ -29,6 +30,9 @@
 	    </children>
     </AnchorPane>
 
+	<AnchorPane layoutX="10" layoutY="210" fx:id="pane" styleClass="bordered_pane">
+	</AnchorPane>
+
     <AnchorPane layoutX="120" layoutY="10" disable="true" fx:id="feedFPane" styleClass="bordered_pane">
     <!-- ten panel należy zamienie tworzonym programowo i dostosowanym do wejśc dla danego przykladu -->
 	    <children>
@@ -41,9 +45,13 @@
 	    </children>
     </AnchorPane>
 
-	<AnchorPane layoutX="10" layoutY="210" fx:id="pane" styleClass="bordered_pane">
+	<AnchorPane layoutX="120" layoutY="200" fx:id="tablePane" styleClass="bordered_pane">
+		<children>
+			<TableView fx:id="dataTable" editable="false">
+			</TableView>
+		</children>
 	</AnchorPane>
-	
+
 	<AnchorPane layoutX="300" layoutY="10" fx:id="chartsPane" styleClass="bordered_pane">
 	</AnchorPane>
 

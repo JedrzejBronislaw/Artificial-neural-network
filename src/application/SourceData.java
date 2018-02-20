@@ -69,6 +69,10 @@ public class SourceData {
 		return numberColumns[index];
 	}
 
+	public NumberColumn[] getColumns(){
+		return numberColumns;
+	}
+
 //	public double[] getColumnData(int index){
 //		return numberColumns[index].getData();
 //	}
@@ -117,9 +121,9 @@ public class SourceData {
 		for(int i=0; i<numberOfColumns()-1; i++)
 			if(i!=index)
 				newColumnTypes[j++] = columnTypes[i];
-		
+
 		file.usunKolumne(index);
-		
+
 		if(index == predictionColumnIndex)
 			predictionColumnIndex = numberOfColumns()-1;
 		else

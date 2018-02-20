@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import javax.swing.text.TabableView;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +17,7 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -45,35 +48,42 @@ public class FXMLDocumentController implements Initializable{
     @FXML private Button showChartsButton;
     @FXML private AnchorPane chartsPane;
 
+    @FXML private AnchorPane tablePane;
+    @FXML private TableView<NumberColumnItem> dataTable;
+
+
     private ANNController annController;
     private RawDataController rawDataController;
 
     String dataFileName;
+	SourceData rd;
 
     @FXML
     private void selectFile(ActionEvent event){
     	dataFileName = "data\\diamonds.csv";
+    	rd = new SourceData(dataFileName);
 
     	annController = new ANNController(dataFileName);
-    	rawDataController = new RawDataController(pane);
+    	rawDataController = new RawDataController(dataTable);
+//    	rawDataController = new RawDataController(pane);
     	selectedFileName.setText(dataFileName);
     	loadDataPane.setDisable(false);
 
     	rawDataController.loadCSVData(dataFileName);
-		rawDataController.setColumnsNames();
-		
+//		rawDataController.setColumnsNames(rd.getNamesOfColumns());
+    	rawDataController.fill(rd.getColumns());
+
 		showChartsButton.setDisable(false);
     }
 
     @FXML
     private void showCharts(ActionEvent event){
 
-    	SourceData rd = new SourceData(dataFileName);
     	int n = rd.numberOfColumns();
-    	for(int i=0; i<n; i++){
-    		System.out.println(rd.getColumnName(i) + ": " + rd.getColumnType(i));
-    		System.out.println(rd.getColumnStatistics(i));
-    	}
+//    	for(int i=0; i<n; i++){
+//    		System.out.println(rd.getColumnName(i) + ": " + rd.getColumnType(i));
+//    		System.out.println(rd.getColumnStatistics(i));
+//    	}
 
     	rd.selectPredictColumn(3);
 
