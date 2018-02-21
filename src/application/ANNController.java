@@ -17,10 +17,10 @@ import siec.UczenieSieci;
 public class ANNController {
 
 	private ANN siec = new ANN(new int[]{4,4,1});
-	private String dataFileName;
+	private float[][] data;
 
-	public ANNController(String dataFileName) {
-		this.dataFileName = dataFileName;
+	public ANNController(float[][] data) {
+		this.data = data;
 	}
 
 	public float ANNResult(float[] wejscie){
@@ -39,7 +39,7 @@ public class ANNController {
 		UczenieSieci uczenieSieci = new UczenieSieci(siec);
 		ANNPreview preview = new ANN_matrix_preview(siec);
 		ANNBledy bledy = new ANN_bledy(siec);
-		float[][] dane = main.Main.diamentyDane();
+		float[][] dane = data;//main.Main.diamentyDane();
 		float[][] daneT, daneU;
 		long time;
 
@@ -69,7 +69,7 @@ public class ANNController {
 //		uczenieSieci.uczWstepnie(25,0.000001f);
 //		uczenieSieci.uczWstepnie(25,0.0000001f);
 //		uczenieSieci.uczWstepnie(25,0.00000001f);
-		uczenieSieci.ucz(10);
+		uczenieSieci.ucz(10, progressUpdate);
 		if (progressUpdate != null) progressUpdate.accept(1);
 		time = System.nanoTime() - time;
 		System.out.println((time/1000000)/1000f + " s");

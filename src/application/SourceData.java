@@ -42,12 +42,6 @@ public class SourceData {
 				removeColumn(i);
 	}
 
-	public double[] getNumerData(){
-		//TODO
-		return null;
-
-	}
-
 	private void setStatistics() {
 //		columnStatistics = new ColumnStatstics[numberOfColumns()];
 //
@@ -169,4 +163,24 @@ public class SourceData {
 //		}
 //		return column;
 //	}
+
+
+	public float[][] getData(ColumnController columnController) {
+		List<NumberColumn> columns = columnController.selectedColumn();
+		float[][] data = new float[numberOfRecords()][columns.size()];
+
+//		file.setKolumnaWynikow(columnController.getPredicColumnIndex());
+
+//		for(float[] record : data)
+		for(int r=0; r<data.length; r++){
+//			int cc=0;
+			for(int c=0; c<data[r].length; c++){
+//				if (columnController.)
+				data[r][c] = (float) columns.get(c).value(r);//getData()[r];//Float.parseFloat(file.getValue(r, c));
+			}
+		}
+
+
+		return data;
+	}
 }

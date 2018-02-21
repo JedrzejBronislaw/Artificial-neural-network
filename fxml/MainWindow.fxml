@@ -23,7 +23,7 @@
 
     <AnchorPane layoutX="10" layoutY="110" disable="true" fx:id="loadDataPane" styleClass="bordered_pane">
 	    <children>
-	    	<Button layoutX="5" layoutY="5" text="Load data" onAction="#hadnleButtonInputData" fx:id="inputData"/>
+	    	<Button layoutX="5" layoutY="5" text="Teach network" onAction="#hadnleButtonTeachNetwork" fx:id="teachNetwork"/>
 	    	<Label layoutX="5" layoutY="35" fx:id="inputDataStatus"/>
 	    	<Label layoutX="5" layoutY="55" fx:id="learningPercent"/>
 	    	<Label layoutX="5" layoutY="75" fx:id="learningTime"/>

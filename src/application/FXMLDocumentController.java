@@ -26,7 +26,7 @@ public class FXMLDocumentController implements Initializable{
 
 
     @FXML private AnchorPane feedFPane;
-    @FXML private Button inputData;
+    @FXML private Button teachNetwork;
     @FXML private TextField inKaraty;
     @FXML private TextField inX;
     @FXML private TextField inY;
@@ -53,25 +53,20 @@ public class FXMLDocumentController implements Initializable{
 
 
     private ANNController annController;
-    private RawDataController rawDataController;
+    private ColumnController columnController;
 
     String dataFileName;
-	SourceData rd;
+	SourceData sourceData;
 
     @FXML
     private void selectFile(ActionEvent event){
     	dataFileName = "data\\diamonds.csv";
-    	rd = new SourceData(dataFileName);
+    	sourceData = new SourceData(dataFileName);
 
-    	annController = new ANNController(dataFileName);
-    	rawDataController = new RawDataController(dataTable);
-//    	rawDataController = new RawDataController(pane);
+    	columnController = new ColumnController(dataTable, sourceData.getColumns());
+    	columnController.setPredicColumnIndex(3);
     	selectedFileName.setText(dataFileName);
-    	loadDataPane.setDisable(false);
-
-    	rawDataController.loadCSVData(dataFileName);
-//		rawDataController.setColumnsNames(rd.getNamesOfColumns());
-    	rawDataController.fill(rd.getColumns());
+    	loadDataPane.setDisable(false);;
 
 		showChartsButton.setDisable(false);
     }
@@ -79,32 +74,32 @@ public class FXMLDocumentController implements Initializable{
     @FXML
     private void showCharts(ActionEvent event){
 
-    	int n = rd.numberOfColumns();
+    	int n = sourceData.numberOfColumns();
 //    	for(int i=0; i<n; i++){
 //    		System.out.println(rd.getColumnName(i) + ": " + rd.getColumnType(i));
 //    		System.out.println(rd.getColumnStatistics(i));
 //    	}
 
-    	rd.selectPredictColumn(3);
+//    	sourceData.selectPredictColumn(5);
 
     	ScrollPane scrollPane = new ScrollPane();
     	scrollPane.setPrefSize(600, 600);
     	chartsPane.getChildren().add(scrollPane);
     	VBox vBox = new VBox();
 
-		for(int i=0;i<rd.numberOfColumns();i++){
-			ScatterChart<Number, Number> sc = chart(rd,i);
+		for(int i=0;i<sourceData.numberOfColumns();i++){
+			ScatterChart<Number, Number> sc = chart(sourceData,i,columnController.getPredicColumnIndex());
 			sc.setLayoutY(i*400);
 			vBox.getChildren().add(sc);
 		}
 		scrollPane.setContent(vBox);
     }
 
-    private ScatterChart<Number, Number> chart(SourceData rd, int columnIndex) {
+    private ScatterChart<Number, Number> chart(SourceData sourceData, int columnIndex, int predictColumnIndex) {
     	final int maxNumberOfPoints = 100;
 
-    	ColumnStatstics statPredCol = rd.getColumn(rd.getPredictionColumnIndex()).getStatistics();
-    	ColumnStatstics statValue = rd.getColumn(columnIndex).getStatistics();
+    	ColumnStatstics statPredCol = sourceData.getColumn(predictColumnIndex).getStatistics();
+    	ColumnStatstics statValue = sourceData.getColumn(columnIndex).getStatistics();
 
     	int yMin = (int) Math.floor(statPredCol.getMin());
     	int yMax = (int) Math.ceil(statPredCol.getMax());
@@ -114,8 +109,8 @@ public class FXMLDocumentController implements Initializable{
     	int xUnit = (int) Math.ceil((xMax-xMin)/10f);
     	int yUnit = (int) Math.ceil((yMax-yMin)/10f);
 
-    	String xLabel = rd.getColumnName(columnIndex);
-    	String yLabel = rd.getColumnName(rd.getPredictionColumnIndex());
+    	String xLabel = sourceData.getColumnName(columnIndex);
+    	String yLabel = sourceData.getColumnName(predictColumnIndex);
 
     	NumberAxis yAxis = new NumberAxis(yLabel, yMin, yMax, yUnit);
     	NumberAxis xAxis = new NumberAxis(xLabel, xMin, xMax, xUnit);
@@ -128,10 +123,10 @@ public class FXMLDocumentController implements Initializable{
 		Random r = new Random();
 		int x;
 		int n;
-		n = Math.min(rd.numberOfRecords(), maxNumberOfPoints);
+		n = Math.min(sourceData.numberOfRecords(), maxNumberOfPoints);
 		for (int i=0; i<n;i++){
-			x = r.nextInt(rd.numberOfRecords());
-				seria.getData().add(new XYChart.Data<Number, Number>(rd.getValue(columnIndex, x), rd.getValue(rd.getPredictionColumnIndex(), x)));
+			x = r.nextInt(sourceData.numberOfRecords());
+				seria.getData().add(new XYChart.Data<Number, Number>(sourceData.getValue(columnIndex, x), sourceData.getValue(predictColumnIndex, x)));
 		}
 
 		sc.getData().add(seria);
@@ -140,14 +135,21 @@ public class FXMLDocumentController implements Initializable{
 	}
 
 	@FXML
-    private void hadnleButtonInputData(ActionEvent event){
+    private void hadnleButtonTeachNetwork(ActionEvent event){
+		annController = new ANNController(sourceData.getData(columnController));
+
+		System.out.println("Dane: ");
+		for(float f :sourceData.getData(columnController)[0])
+			System.out.print(f + " | ");
+		System.out.println();
+		
     		try{
 	    		inputDataStatus.setText("Uczenie...");
 
 
 	    		annController.uczODiamentach((percentage)->{
 	    			Platform.runLater(()->{
-	    				learningPercent.setText(percentage*100+"%");
+	    				learningPercent.setText((int)(percentage*10000)/100f+"%");
 	    			});
 	    		}, (time)->{
 	    			Platform.runLater(()->{

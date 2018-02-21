@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.function.DoubleConsumer;
 
 public class UczenieSieci {
 
@@ -76,17 +77,30 @@ public class UczenieSieci {
 
 
 	public long ucz(long liczbaEpok){
-		long czas = System.nanoTime();
+		return ucz(liczbaEpok, null);
+	}
 
+	public long ucz(long liczbaEpok, DoubleConsumer progressUpdate){
+		long czas = System.nanoTime();
+		float perc, oldPerc = 0;
+		
 		if (tasowanie) tasuj(przykladyUczace);
 
 		if (zapisDoPliku)
 			zapiszBledyDoPlku();
 		if (zapisDoPlikuWag)
 			zapiszWagiDoPlku();
-		
-		for(long i=0; i<liczbaEpok; i++)
+
+		for(long i=0; i<liczbaEpok; i++){
 			epokaUczenia();
+			if (progressUpdate != null){
+				perc = (float)i/liczbaEpok;
+				if((perc-oldPerc) >= 0.0001){
+					progressUpdate.accept(perc);
+					oldPerc = perc;
+				}
+			}
+		}
 
 		czas = System.nanoTime() - czas;
 
