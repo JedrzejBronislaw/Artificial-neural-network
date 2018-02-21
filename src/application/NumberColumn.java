@@ -22,9 +22,9 @@ public class NumberColumn {
 		return data[index];
 	}
 
-//	public double[] getData(){
-//
-//	}
+	public double[] getData(){
+		return data;
+	}
 
 	public String getName() {
 		return name;

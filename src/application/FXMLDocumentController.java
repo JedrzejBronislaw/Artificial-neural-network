@@ -19,10 +19,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 public class FXMLDocumentController implements Initializable {
 
@@ -72,11 +69,18 @@ public class FXMLDocumentController implements Initializable {
 	@FXML
 	private TableView<NumberColumnItem> dataTable;
 
+
+
 	private ANNController annController;
 	private ColumnController columnController;
+	private NetworkParametersController networkParametersController;
 
 	String dataFileName;
 	SourceData sourceData;
+
+	public void setNetworkParametersController(NetworkParametersController networkParametersController) {
+		this.networkParametersController = networkParametersController;
+	}
 
 	@FXML
 	private void selectFile(ActionEvent event) {
@@ -84,10 +88,9 @@ public class FXMLDocumentController implements Initializable {
 		sourceData = new SourceData(dataFileName);
 
 		columnController = new ColumnController(dataTable, sourceData.getColumns());
-		columnController.setPredictColumnIndex(3);
+		columnController.setPredictColumnIndex(columnController.numberOfColumns()-1);
 		selectedFileName.setText(dataFileName);
 		loadDataPane.setDisable(false);
-		;
 
 		showChartsButton.setDisable(false);
 	}
@@ -151,7 +154,8 @@ public class FXMLDocumentController implements Initializable {
 
 	@FXML
 	private void hadnleButtonTeachNetwork(ActionEvent event) {
-		annController = new ANNController(sourceData.getData(columnController));
+
+		annController = new ANNController(networkParametersController, sourceData.getData(columnController));
 
 		System.out.println("Dane: ");
 		for (float f : sourceData.getData(columnController)[0])
@@ -161,16 +165,23 @@ public class FXMLDocumentController implements Initializable {
 		try {
 			inputDataStatus.setText("Uczenie...");
 
-			annController.uczODiamentach((percentage) -> {
+			annController.teach((percentage) -> {
 				Platform.runLater(() -> {
 					learningPercent.setText((int) (percentage * 10000) / 100f + "%");
 				});
-			}, (time) -> {
+			}, (report) -> {
 				Platform.runLater(() -> {
 					updateFeedForwadPane();
 					feedFPane.setDisable(false);
 					inputDataStatus.setText("Nauczona");
-					learningTime.setText("Time: " + (time / 1000000 / (float) 1000) + " s");
+					learningTime.setText("Time: " + (report.teachingTime / 1000000 /1000f) + " s");
+
+					System.out.println("Before");
+					System.out.println("Loss L: " + report.lossSnapshotBefore.getAvgLossL());
+					System.out.println("Loss T: " + report.lossSnapshotBefore.getAvgLossT());
+					System.out.println("After");
+					System.out.println("Loss L: " + report.lossSnapshotAfter.getAvgLossL());
+					System.out.println("Loss T: " + report.lossSnapshotAfter.getAvgLossT());
 				});
 			});
 		} catch (Exception e) {
@@ -188,7 +199,7 @@ public class FXMLDocumentController implements Initializable {
 		TextField[] textFields = new TextField[n];
 //		int maxLabelWidth = 0;
 		int secondColumnX = 50;
-		
+
 		feedFPane.getChildren().clear();
 
 		for(int i=0; i<n; i++)
@@ -202,21 +213,21 @@ public class FXMLDocumentController implements Initializable {
 				labels[i].setLayoutY(30*i + 10);
 				textFields[i].setLayoutX(secondColumnX);
 				textFields[i].setLayoutY(30*i +5);
-				
-				textFields[i].setMaxWidth(30);
+
+				textFields[i].setMaxWidth(70);
 
 				feedFPane.getChildren().add(labels[i]);
 				feedFPane.getChildren().add(textFields[i]);
-				
+
 //				if (labels[i].getWidth() >= maxLabelWidth) maxLabelWidth = (int) labels[i].getWidth();
 		}
 //		secondColumnX = 5 + maxLabelWidth + 10;
-		
+
 //		for(int i=0; i<n; i++)
 //			textFields[i].setLayoutX(secondColumnX);
-		
-			
-		
+
+
+
 		feedForward.setLayoutY(30*(n) + 10);
 		feedFResult.setLayoutY(30*(n) + 10);
 		feedFResult.setLayoutX(secondColumnX);

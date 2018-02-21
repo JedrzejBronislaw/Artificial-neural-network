@@ -10,9 +10,11 @@ public class NumberColumnItem {
 	private String name;
 	private double min;
 	private double max;
+	private double avg;
 
 	private BooleanProperty selected = new SimpleBooleanProperty(true);
 	private BooleanProperty predict = new SimpleBooleanProperty(false);
+
 
 
 	public NumberColumnItem(NumberColumn column) {
@@ -21,6 +23,7 @@ public class NumberColumnItem {
 		name = column.getName();
 		min = column.getStatistics().getMin();
 		max = column.getStatistics().getMax();
+		avg = column.getStatistics().getAvg();
 	}
 
 	public String getName() {
@@ -34,6 +37,15 @@ public class NumberColumnItem {
 	public double getMax() {
 		return max;
 	}
+
+	public double getAvg() {
+		return avg;
+	}
+
+	public double getR() {
+		return column.getStatistics().getR();
+	}
+
 
 
 	public boolean isSelected() {

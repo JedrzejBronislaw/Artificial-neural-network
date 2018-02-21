@@ -1,9 +1,7 @@
 package application;
 
 import java.awt.EventQueue;
-import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
-import java.util.function.LongConsumer;
 
 import main.DzielDane;
 import main.Main;
@@ -16,10 +14,27 @@ import siec.UczenieSieci;
 
 public class ANNController {
 
+	public interface TeachingReportConsumer{
+		void accept(TeachingReport report);
+	}
+
+
 	private ANN siec = new ANN(new int[]{4,4,1});
 	private float[][] data;
+	private NetworkParametersController networkParameters;
+//	LossSnapshot lossSnapshotBefore, lossSnapshotAfter;
 
-	public ANNController(float[][] data) {
+
+//	public LossSnapshot getLossSnapshotAfter() {
+//		return lossSnapshotAfter;
+//	}
+//	public LossSnapshot getLossSnapshotBefore() {
+//		return lossSnapshotBefore;
+//	}
+
+
+	public ANNController(NetworkParametersController networkParameters, float[][] data) {
+		this.networkParameters = networkParameters;
 		this.data = data;
 	}
 
@@ -27,21 +42,23 @@ public class ANNController {
 		return siec.licz(wejscie);
 	}
 
-	public void uczODiamentach(DoubleConsumer progressUpdate, LongConsumer afterEvent){
+	public void teach(DoubleConsumer progressUpdate, TeachingReportConsumer afterEvent){
+//		TeachingReport report;
 		EventQueue.invokeLater(()->{
-			long time = diamenty(progressUpdate);
+			TeachingReport report = teaching(progressUpdate);
 			if(afterEvent!=null)
-				afterEvent.accept(time);
+				afterEvent.accept(report);
 			});
 	}
 
-	private long diamenty(DoubleConsumer progressUpdate) {
+	private TeachingReport teaching(DoubleConsumer progressUpdate) {
 		UczenieSieci uczenieSieci = new UczenieSieci(siec);
 		ANNPreview preview = new ANN_matrix_preview(siec);
 		ANNBledy bledy = new ANN_bledy(siec);
 		float[][] dane = data;//main.Main.diamentyDane();
 		float[][] daneT, daneU;
 		long time;
+		TeachingReport report = new TeachingReport();
 
 		DzielDane dzielDane = new DzielDane(dane, 0.3f);
 		daneT = dzielDane.getDaneT();
@@ -56,6 +73,9 @@ public class ANNController {
 
 		System.out.println("똱edni bl퉐 T: " + bledy.bladSredni(daneT));
 		System.out.println("똱edni bl퉐 U: " + bledy.bladSredni(daneU));
+//		lossSnapshotBefore = new LossSnapshot(bledy, daneT, daneU);
+		report.lossSnapshotBefore = new LossSnapshot(bledy, daneT, daneU);
+		report.weightsBefore = siec.getDetails().getWeightsWagi();
 
 		System.out.println();
 
@@ -69,7 +89,7 @@ public class ANNController {
 //		uczenieSieci.uczWstepnie(25,0.000001f);
 //		uczenieSieci.uczWstepnie(25,0.0000001f);
 //		uczenieSieci.uczWstepnie(25,0.00000001f);
-		uczenieSieci.ucz(10, progressUpdate);
+		uczenieSieci.ucz(networkParameters.getNumberOfEpoches(), progressUpdate);
 		if (progressUpdate != null) progressUpdate.accept(1);
 		time = System.nanoTime() - time;
 		System.out.println((time/1000000)/1000f + " s");
@@ -78,6 +98,9 @@ public class ANNController {
 
 		System.out.println("똱edni bl퉐 T: " + bledy.bladSredni(daneT));
 		System.out.println("똱edni bl퉐 U: " + bledy.bladSredni(daneU));
+//		lossSnapshotAfter = new LossSnapshot(bledy, daneT, daneU);
+		report.lossSnapshotAfter = new LossSnapshot(bledy, daneT, daneU);
+		report.weightsAfter = siec.getDetails().getWeightsWagi();
 
 		System.out.println();
 
@@ -86,6 +109,7 @@ public class ANNController {
 		Main.pokazWykres("bledyTemp.txt");
 		Main.pokazWykres("wagiTemp.txt");
 
-		return time;
+		report.teachingTime = time;
+		return report;
 	}
 }

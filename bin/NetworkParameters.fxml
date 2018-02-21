@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.CheckBox?>
+
+<AnchorPane layoutX="10" layoutY="280" fx:id="networkParametersPane" styleClass="bordered_pane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.NetworkParametersController">
+	    <children>
+	    	<Label layoutX="5" layoutY="5" text="Architecture:"/>
+	    	<Label layoutX="5" layoutY="105" text="Learning rate:"/>
+	    	<Label layoutX="5" layoutY="135" text="Number of epochs:"/>
+	    	<Label layoutX="5" layoutY="165" text="Shuffle: "/>
+
+	    	<TextField layoutX="120" layoutY="5" prefWidth="50" onKeyPressed="#changeArchitecture" fx:id="architecture"/>
+	    	<TextField layoutX="120" layoutY="105" prefWidth="50" fx:id="learnigRate" text="0.1"/>
+	    	<TextField layoutX="120" layoutY="135" prefWidth="50" fx:id="numberOfEpochs" text="1"/>
+	    	<CheckBox layoutX="120" layoutY="165" fx:id="shuffle"/>
+
+	    	<Label layoutX="20" layoutY="35" text="Layers: "/>
+	    	<Label layoutX="100" layoutY="35" fx:id="layers"/>
+	    	<Label layoutX="20" layoutY="55" text="Neurons: "/>
+	    	<Label layoutX="100" layoutY="55" fx:id="neurons"/>
+	    	<Label layoutX="20" layoutY="75" text="Connections: "/>
+	    	<Label layoutX="100" layoutY="75" fx:id="connections"/>
+
+	    </children>
+</AnchorPane>
+

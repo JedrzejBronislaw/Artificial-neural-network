@@ -1,10 +1,6 @@
 package application;
 
-import java.awt.font.NumericShaper;
-import java.util.ArrayList;
 import java.util.List;
-
-import com.sun.javafx.image.impl.ByteIndexed.Getter;
 
 import main.CSVFile;
 

@@ -19,6 +19,11 @@ public class ColumnController{
 
 	private ObservableList<NumberColumnItem> items;
 
+
+	public int numberOfColumns(){
+		return items.size();
+	}
+
 	public int getPredictColumnIndex() {
 		return predictColumnIndex;
 	}
@@ -89,6 +94,11 @@ public class ColumnController{
 						for(NumberColumnItem i : items)
 							if(i != item)
 								i.setPredict(false);
+
+//						dataTable.getItems().get(1).
+						for(NumberColumnItem i : items)
+							i.getNumberColumn().getStatistics().compureR(i.getNumberColumn().getData(), item.getNumberColumn().getData());
+						dataTable.refresh();
 					}
 				} else {
 					int c = 0;
@@ -104,10 +114,13 @@ public class ColumnController{
 		col5.setEditable(true);
 
 		TableColumn<NumberColumnItem, Boolean> col6 = new TableColumn<>("Avg");
+		col6.setCellValueFactory(new PropertyValueFactory<>("avg"));
 		TableColumn<NumberColumnItem, Boolean> col7 = new TableColumn<>("R");
+		col7.setCellValueFactory(new PropertyValueFactory<>("r"));
 
 		dataTable.setEditable(true);
 
+		this.dataTable.getColumns().clear();
 		this.dataTable.getColumns().addAll(col5, col4, col1, col2, col3, col6, col7);
 
 	}

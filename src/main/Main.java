@@ -1,14 +1,10 @@
 package main;
 
 import java.awt.EventQueue;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
-import oko.Oko;
 import siec.ANN;
 import siec.ANNBledy;
 import siec.ANNDetails;
@@ -18,7 +14,6 @@ import siec.ANN_bledy;
 import siec.ANN_matrix;
 import siec.ANN_matrix_preview;
 import siec.UczenieSieci;
-import siec.Wagi;
 import test.ParametryUczenia;
 import test.ParametryUczenia.Tasowanie;
 import test.TestUczenia;
@@ -170,6 +165,7 @@ public class Main {
 
 			@Override
 			public void run() {
+				@SuppressWarnings("unused")
 				OknoWykresu oknoWykresu = new OknoWykresu(nazwaPliku);
 			}
 		});
