@@ -36,24 +36,23 @@
     <AnchorPane layoutX="120" layoutY="10" disable="true" fx:id="feedFPane" styleClass="bordered_pane">
     <!-- ten panel należy zamienie tworzonym programowo i dostosowanym do wejśc dla danego przykladu -->
 	    <children>
-	    	<TextField layoutX="5" layoutY="5" fx:id="inKaraty"/>
+<!--	    	<TextField layoutX="5" layoutY="5" fx:id="inKaraty"/>
 	    	<TextField layoutX="5" layoutY="35" fx:id="inX"/>
 	    	<TextField layoutX="5" layoutY="65" fx:id="inY"/>
-	    	<TextField layoutX="5" layoutY="95" fx:id="inZ"/>
-	    	<Button layoutX="5" layoutY="125" text="Ask" onAction="#hadnleButtonFeedForward" fx:id="feedForward"/>
+	    	<TextField layoutX="5" layoutY="95" fx:id="inZ"/>-->
+	    	<Button layoutX="5" layoutY="125" text="Ask" fx:id="feedForward"/>
 	    	<Label  layoutX="5" layoutY="155" fx:id="feedFResult"/>
 	    </children>
     </AnchorPane>
 
-	<AnchorPane layoutX="120" layoutY="200" fx:id="tablePane" styleClass="bordered_pane">
-		<children>
-			<TableView fx:id="dataTable" editable="false">
-			</TableView>
-		</children>
-	</AnchorPane>
+	<ScrollPane layoutX="120" layoutY="200" fx:id="tablePane" styleClass="bordered_pane" maxWidth="400" maxHeight="420">
+		<TableView fx:id="dataTable" editable="false" prefWidth="350" prefHeight="250">
+		</TableView>
+	</ScrollPane>
 
-	<AnchorPane layoutX="300" layoutY="10" fx:id="chartsPane" styleClass="bordered_pane">
-	</AnchorPane>
+	<ScrollPane layoutX="500" layoutY="10" fx:id="chartsPane" styleClass="bordered_pane" minViewportWidth="200"  maxHeight="450">
+
+	</ScrollPane>
 
     </children>
 </AnchorPane>

@@ -1,6 +1,13 @@
-/*sdfsf */
+
 .bordered_pane{
 	-fx-border-color: black;
 	-fx-border-width: 1;
 	-fx-border-style: solid;
+}
+
+.default-color0.chart-symbol {
+/*    -fx-background-color: #860061, white;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;*/
+     -fx-padding: 2px;
 }

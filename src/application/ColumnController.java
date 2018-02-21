@@ -15,16 +15,19 @@ import javafx.util.Callback;
 public class ColumnController{
 
 	private TableView<NumberColumnItem> dataTable;
-	private int predicColumnIndex;
+	private int predictColumnIndex;
 
 	private ObservableList<NumberColumnItem> items;
 
-	public int getPredicColumnIndex() {
-		return predicColumnIndex;
+	public int getPredictColumnIndex() {
+		return predictColumnIndex;
 	}
-	public void setPredicColumnIndex(int predicColumnIndex) {
-		items.get(predicColumnIndex).setPredict(true);
-		this.predicColumnIndex = predicColumnIndex;
+	public void setPredictColumnIndex(int predictColumnIndex) {
+		items.get(predictColumnIndex).setPredict(true);
+		this.predictColumnIndex = predictColumnIndex;
+	}
+	public NumberColumn getPredictColumn() {
+		return items.get(predictColumnIndex).getNumberColumn();
 	}
 
 	/***
@@ -82,7 +85,7 @@ public class ColumnController{
 					if(!item.isSelected())
 						item.setPredict(false);
 					else {
-						predicColumnIndex = param;
+						predictColumnIndex = param;
 						for(NumberColumnItem i : items)
 							if(i != item)
 								i.setPredict(false);
