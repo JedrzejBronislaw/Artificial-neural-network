@@ -276,10 +276,10 @@ public class UczenieSieci {
 	public void setWspolczynnykUczenia(double wspUczenia) {
 		ANN.setWspUczenia(wspUczenia);
 	}
-	public void uczWstepnie(int i, float d) {
+	public void uczWstepnie(int i, float d, DoubleConsumer progressUpdate) {
 		float min = ANN.getMinPochFunAktywacji();
 		ANN.setMinPochFunAktywacji(d);
-		ucz(i);
+		ucz(i, progressUpdate);
 		ANN.setMinPochFunAktywacji(min);
 
 	}

@@ -38,7 +38,7 @@ public class ANN_bledy implements ANNBledy{
 
 		return roznica;
 	}
-	
+
 	@Override
 	public double pochBladu(float[] przykladTestowy) {
 		float wynikUzyskany;
@@ -52,5 +52,31 @@ public class ANN_bledy implements ANNBledy{
 //		roznica = wynikOczekiwany-wynikUzyskany;
 
 		return roznica;
+	}
+
+	@Override
+	public double bladWzgledny(float[] przykladTestowy) {
+		float wynikUzyskany;
+		float wynikOczekiwany;
+		double roznica;
+
+		wynikOczekiwany = przykladTestowy[przykladTestowy.length-1];
+		wynikUzyskany = ANN.licz(przykladTestowy);
+
+		roznica = Math.abs(wynikUzyskany-wynikOczekiwany)/wynikOczekiwany;
+
+		return roznica;
+	}
+
+	@Override
+	public double sredniBladWzgledny(float[][] zbiorTestowy){
+		double L = 0;
+
+		for(float[] przyklad : zbiorTestowy)
+			L += bladWzgledny(przyklad);
+
+		L /= zbiorTestowy.length;
+
+		return L;
 	}
 }

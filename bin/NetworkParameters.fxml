@@ -10,12 +10,14 @@
 	    	<Label layoutX="5" layoutY="5" text="Architecture:"/>
 	    	<Label layoutX="5" layoutY="105" text="Learning rate:"/>
 	    	<Label layoutX="5" layoutY="135" text="Number of epochs:"/>
-	    	<Label layoutX="5" layoutY="165" text="Shuffle: "/>
+	    	<Label layoutX="5" layoutY="165" text="Num. of init. ep.:"/>
+	    	<Label layoutX="5" layoutY="195" text="Shuffle: "/>
 
-	    	<TextField layoutX="120" layoutY="5" prefWidth="50" onKeyPressed="#changeArchitecture" fx:id="architecture"/>
+	    	<TextField layoutX="120" layoutY="5" prefWidth="50" onKeyReleased="#changeArchitecture" fx:id="architecture"/>
 	    	<TextField layoutX="120" layoutY="105" prefWidth="50" fx:id="learnigRate" text="0.1"/>
-	    	<TextField layoutX="120" layoutY="135" prefWidth="50" fx:id="numberOfEpochs" text="1"/>
-	    	<CheckBox layoutX="120" layoutY="165" fx:id="shuffle"/>
+	    	<TextField layoutX="120" layoutY="135" prefWidth="50" fx:id="numberOfEpochs" text="10"/>
+	    	<TextField layoutX="120" layoutY="165" prefWidth="50" fx:id="numberOfInitEpochs" text="10"/>
+	    	<CheckBox layoutX="120" layoutY="195" fx:id="shuffle" selected="true"/>
 
 	    	<Label layoutX="20" layoutY="35" text="Layers: "/>
 	    	<Label layoutX="100" layoutY="35" fx:id="layers"/>

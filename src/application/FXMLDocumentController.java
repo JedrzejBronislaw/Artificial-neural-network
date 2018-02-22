@@ -85,10 +85,13 @@ public class FXMLDocumentController implements Initializable {
 	@FXML
 	private void selectFile(ActionEvent event) {
 		dataFileName = "data\\diamonds.csv";
+//		dataFileName = "data\\winequality-red.csv";
+//		dataFileName = "data\\2A+5B+3C+12.csv";
 		sourceData = new SourceData(dataFileName);
 
 		columnController = new ColumnController(dataTable, sourceData.getColumns());
 		columnController.setPredictColumnIndex(columnController.numberOfColumns()-1);
+		if (networkParametersController != null) networkParametersController.setColumnController(columnController);
 		selectedFileName.setText(dataFileName);
 		loadDataPane.setDisable(false);
 
@@ -157,10 +160,10 @@ public class FXMLDocumentController implements Initializable {
 
 		annController = new ANNController(networkParametersController, sourceData.getData(columnController));
 
-		System.out.println("Dane: ");
-		for (float f : sourceData.getData(columnController)[0])
-			System.out.print(f + " | ");
-		System.out.println();
+//		System.out.println("Dane: ");
+//		for (float f : sourceData.getData(columnController)[0])
+//			System.out.print(f + " | ");
+//		System.out.println();
 
 		try {
 			inputDataStatus.setText("Uczenie...");

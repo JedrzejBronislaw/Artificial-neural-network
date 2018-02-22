@@ -19,7 +19,7 @@ public class ANNController {
 	}
 
 
-	private ANN siec = new ANN(new int[]{4,4,1});
+	private ANN siec;// = new ANN(new int[]{4,4,1});
 	private float[][] data;
 	private NetworkParametersController networkParameters;
 //	LossSnapshot lossSnapshotBefore, lossSnapshotAfter;
@@ -35,6 +35,7 @@ public class ANNController {
 
 	public ANNController(NetworkParametersController networkParameters, float[][] data) {
 		this.networkParameters = networkParameters;
+		siec = new ANN(networkParameters.getArchitecture());
 		this.data = data;
 	}
 
@@ -66,13 +67,15 @@ public class ANNController {
 
 		uczenieSieci.setPrzykladyTestowe(daneT);
 		uczenieSieci.setPrzykladyUczace(daneU);
-		uczenieSieci.setWspolczynnykUczenia(0.1f);
-		uczenieSieci.setTasowanie(true);
+		uczenieSieci.setWspolczynnykUczenia(networkParameters.getLearnigRate());
+		uczenieSieci.setTasowanie(networkParameters.getShuffle());
 		uczenieSieci.setZapisDoPliku(true);
 		uczenieSieci.setZapisDoPlikuWag(true);
 
 		System.out.println("똱edni bl퉐 T: " + bledy.bladSredni(daneT));
 		System.out.println("똱edni bl퉐 U: " + bledy.bladSredni(daneU));
+		System.out.println("똱edni bl퉐 wzgl. T: " + bledy.sredniBladWzgledny(daneT));
+		System.out.println("똱edni bl퉐 wzgl. U: " + bledy.sredniBladWzgledny(daneU));
 //		lossSnapshotBefore = new LossSnapshot(bledy, daneT, daneU);
 		report.lossSnapshotBefore = new LossSnapshot(bledy, daneT, daneU);
 		report.weightsBefore = siec.getDetails().getWeightsWagi();
@@ -82,13 +85,15 @@ public class ANNController {
 		System.out.print("Uczenie... ");
 		time = System.nanoTime();
 		if (progressUpdate != null) progressUpdate.accept(0);
-//		uczenieSieci.uczWstepnie(10,0.01f);
+//		uczenieSieci.uczWstepnie(100,0.01f);
 //		uczenieSieci.uczWstepnie(25,0.001f);
 //		uczenieSieci.uczWstepnie(25,0.0001f);
 //		uczenieSieci.uczWstepnie(25,0.00001f);
 //		uczenieSieci.uczWstepnie(25,0.000001f);
 //		uczenieSieci.uczWstepnie(25,0.0000001f);
-//		uczenieSieci.uczWstepnie(25,0.00000001f);
+		uczenieSieci.uczWstepnie(networkParameters.getNumberOfInitEpoches(),0.00000001f, progressUpdate);
+		if (progressUpdate != null) progressUpdate.accept(1);
+		if (progressUpdate != null) progressUpdate.accept(0);
 		uczenieSieci.ucz(networkParameters.getNumberOfEpoches(), progressUpdate);
 		if (progressUpdate != null) progressUpdate.accept(1);
 		time = System.nanoTime() - time;
@@ -98,6 +103,8 @@ public class ANNController {
 
 		System.out.println("똱edni bl퉐 T: " + bledy.bladSredni(daneT));
 		System.out.println("똱edni bl퉐 U: " + bledy.bladSredni(daneU));
+		System.out.println("똱edni bl퉐 wzgl. T: " + bledy.sredniBladWzgledny(daneT));
+		System.out.println("똱edni bl퉐 wzgl. U: " + bledy.sredniBladWzgledny(daneU));
 //		lossSnapshotAfter = new LossSnapshot(bledy, daneT, daneU);
 		report.lossSnapshotAfter = new LossSnapshot(bledy, daneT, daneU);
 		report.weightsAfter = siec.getDetails().getWeightsWagi();

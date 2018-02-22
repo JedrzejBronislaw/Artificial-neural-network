@@ -13,6 +13,7 @@ public class NetworkParametersController {
 	@FXML private AnchorPane networkParametersPane;
 	@FXML private TextField learnigRate;
 	@FXML private TextField numberOfEpochs;
+	@FXML private TextField numberOfInitEpochs;
 	@FXML private CheckBox shuffle;
 
 	@FXML private TextField architecture;
@@ -20,12 +21,18 @@ public class NetworkParametersController {
 	@FXML private Label neurons;
 	@FXML private Label connections;
 
+	private ColumnController columnController = null;
+
+	public void setColumnController(ColumnController columnController) {
+		this.columnController = columnController;
+	}
+
 	public NetworkParametersController() {
 	}
 
 	public int getNumberOfEpoches(){
 		int result;
-		
+
 		try{
 			result = Integer.parseInt(numberOfEpochs.getText());
 			architecture.setStyle("-fx-background-color: white");
@@ -33,13 +40,27 @@ public class NetworkParametersController {
 			result = 1;
 			architecture.setStyle("-fx-background-color: red");
 		}
-		
+
 		return result;
 	}
 
-	public float learnigRate(){
+	public int getNumberOfInitEpoches(){
+		int result;
+
+		try{
+			result = Integer.parseInt(numberOfInitEpochs.getText());
+			architecture.setStyle("-fx-background-color: white");
+		} catch(NumberFormatException e) {
+			result = 1;
+			architecture.setStyle("-fx-background-color: red");
+		}
+
+		return result;
+	}
+
+	public float getLearnigRate(){
 		float result;
-		
+
 		try {
 			result = Float.parseFloat(learnigRate.getText());
 			architecture.setStyle("-fx-background-color: white");
@@ -47,41 +68,72 @@ public class NetworkParametersController {
 			result = 0;
 			architecture.setStyle("-fx-background-color: red");
 		}
-		
+
 		return result;
 	}
 
+	public boolean getShuffle(){
+		return shuffle.isSelected();
+	}
 
-	@FXML
-	private void changeArchitecture(KeyEvent event){
-		String text = architecture.getText()+event.getText();
+	public int[] getArchitecture(){
+		int inputSize = 0;
+		if (columnController != null) inputSize = columnController.selectedColumn().size()-1;
+
+		String text = architecture.getText();
 		text = text.replace(' ', ',');
 		text = text.replace('|', ',');
 		text = text.replace('.', ',');
 		String[] split = text.split(",");
-		int n = split.length;
+		int n = split.length + 2;
+		if (text.equals("")) n--;
 		int[] splitInt = new int[n];
 
-		for(int i=0; i<n; i++){
+		for(int i=1; i<n-1; i++){
 			try{
-				splitInt[i] = Integer.parseInt(split[i]);
+				splitInt[i] = Integer.parseInt(split[i-1]);
 				architecture.setStyle("-fx-background-color: white");
 			} catch(NumberFormatException e) {
 				layers.setText("");
 				neurons.setText("");
 				connections.setText("");
 				architecture.setStyle("-fx-background-color: red");
-				return;
+				return null;
 			}
 		}
 
+		splitInt[0] = inputSize;
+		splitInt[n-1] = 1;
+
+		return splitInt;
+	}
+
+
+	@FXML
+	private void changeArchitecture(KeyEvent event){
+
+
+		int[] archi = getArchitecture();
+
+		if(archi != null){
+				architecture.setStyle("-fx-background-color: white");
+			} else {
+				layers.setText("");
+				neurons.setText("");
+				connections.setText("");
+				architecture.setStyle("-fx-background-color: red");
+				return;
+			}
+
+		int n = archi.length;
+
 		int neuronsCount = 0;
 		for(int i=0; i<n; i++)
-			neuronsCount += splitInt[i];
+			neuronsCount += archi[i];
 
 		int connectionsCount = 0;
 		for(int i=0; i<n-1; i++)
-			connectionsCount += splitInt[i]*splitInt[i+1]+splitInt[i+1];
+			connectionsCount += archi[i]*archi[i+1]+archi[i+1];
 
 		layers.setText(n+"");
 		neurons.setText(neuronsCount+"");
