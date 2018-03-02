@@ -187,6 +187,7 @@ public class Main {
 		System.out.println();
 	}
 
+	@SuppressWarnings("unused")
 	private static void testZakresowWejsc(){
 		ANN siec = new ANN(new int[] {2,1});
 		ANNPreview podglad = new ANN_matrix_preview(siec);
@@ -212,6 +213,7 @@ public class Main {
 	}
 
 
+	@SuppressWarnings("unused")
 	private static void naukaSieciISkorzystanieZNiej(){
 		ANN siec = new ANN(new int[]{2,5,1});
 		UczenieSieci uczenie = new UczenieSieci(siec);
@@ -288,12 +290,16 @@ public class Main {
 		float[][] zbiorUczacy = zbiorTestowy_2aPlus3b(maksymalnaLiczbaPrzykladow);
 		float[][] zbiorTestowy = zbiorTestowy_2aPlus3b(maksymalnaLiczbaPrzykladow);
 		TestUczenia test = new TestUczenia(siec, zbiorUczacy, zbiorTestowy);
-		ParametryUczenia[] parametry = ParametryUczenia.ilorazKartezjanski(new int[]{100,200,300}, new int[]{100,1000/*,10000*/}, Tasowanie.TAKiNIE);
+		ParametryUczenia[] parametry = ParametryUczenia.ilorazKartezjanski(
+				new int[]{100,200,300}, 
+				new int[]{100,1000}, 
+				Tasowanie.TAKiNIE);
 
 		for(ParametryUczenia pu : parametry){
 			if(pu.liczbaPowtorzen == 1000) pu.opis = "du¿o";
 			if(pu.liczbaPowtorzen == 100 && pu.liczbaPrzykladow == 300) pu.zapisDoPliku=true;
 		}
+
 		long czas1 = System.nanoTime();
 		Wynik[] wyniki = test.test(parametry);
 		czas1 = System.nanoTime() - czas1;
